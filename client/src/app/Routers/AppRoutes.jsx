@@ -63,6 +63,8 @@ const router = createBrowserRouter([
 
 const AppRoutes = () => {
     const dispatch = useDispatch();
+    console.log()
+
 
     useEffect(() => {
         dispatch(hydrateUser());
