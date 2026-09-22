@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createProjectAction, getAllProjectAction, userRelatedProjectAction } from "./projectAction";
+import { createProjectAction, deleteProjectAction, getAllProjectAction, updateProjectAction, userRelatedProjectAction } from "./projectAction";
 
 
 const projectSlice = createSlice({
@@ -56,10 +56,34 @@ const projectSlice = createSlice({
             .addCase(getAllProjectAction.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.payload
-
+            })
+            // ── Update Project ──
+            .addCase(updateProjectAction.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(updateProjectAction.fulfilled, (state) => {
+                state.loading = false
+            })
+            .addCase(updateProjectAction.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload
+            })
+            // ── Delete Project ──
+            .addCase(deleteProjectAction.pending, (state) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(deleteProjectAction.fulfilled, (state) => {
+                state.loading = false
+            })
+            .addCase(deleteProjectAction.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload
             })
     }
 })
+
 
 export const { } = projectSlice.actions
 export default projectSlice.reducer

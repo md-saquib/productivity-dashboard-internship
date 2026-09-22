@@ -43,7 +43,7 @@ const taskSchmea = mongoose.Schema({
         enum: ["todo", "in-progress", "review", "done"]
     }
 
-})
+}, { timestamps: true })   // ← adds createdAt + updatedAt automatically
 
 const TaskModel = mongoose.model('task', taskSchmea)
 

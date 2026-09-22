@@ -21,7 +21,7 @@ export default function NewTask({ isOpen = true, onClose }) {
                 rounded-2xl overflow-hidden
                 max-md:fixed max-md:inset-0 max-md:rounded-none max-md:border-0
                 max-md:shadow-none
-            "> 
+            ">
                 {/* ── Tab Header ── */}
                 <TaskHeader setActiveTab={setActiveTab} onClose={onClose} activeTab={activeTab} />
 
@@ -30,7 +30,7 @@ export default function NewTask({ isOpen = true, onClose }) {
 
                     {/* ── CREATE TASK FORM ── */}
                     {activeTab === "task" && (
-                        <TaskForm onclose={onClose} />
+                        <TaskForm onClose={onClose} />
                     )}
 
                     {/* ── CREATE PROJECT FORM ── */}

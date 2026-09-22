@@ -25,7 +25,8 @@ const authSlice = createSlice({
             })
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.loading = false;
-                // Adjust depending on whether backend logs in user directly upon registration
+                state.user = action.payload.user;
+                state.isAuthenticated = true
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;

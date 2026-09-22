@@ -1,7 +1,10 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Navigate, Outlet } from 'react-router'
 
-const RoleBasedRoute = ({ allowedRole, userRole, isAuthenticated }) => {
+const RoleBasedRoute = ({ allowedRole }) => {
+    const { user, isAuthenticated } = useSelector((state) => state.auth);
+    const userRole = user?.role;
 
     if (!isAuthenticated) return <Navigate to='/' replace />
 

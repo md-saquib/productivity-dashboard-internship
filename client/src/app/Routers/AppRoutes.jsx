@@ -12,77 +12,66 @@ import RoleBasedRoute from './RoleBasedRoute'
 import { hydrateUser } from '../../features/auth/state/authAction'
 import { adminRoutes } from './AdminRoutes'
 import HomePage from '../../features/Dashboard/ui/pages/HomePage'
-import { getAllProjectAction, userRelatedProjectAction } from '../../features/user_Module/Projects/state/projectAction'
-import { getAllTaskAction } from '../../features/user_Module/tasks/state/taskAction'
 
+
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <PublicRoute />,
+        children: [
+            {
+                path: '',
+                element: <AuthLayout />,
+                children: [
+                    {
+                        path: '',
+                        element: <Login />
+                    },
+                    {
+                        path: 'register',
+                        element: <Register />
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        path: '/home',
+        element: <ProtectedRoute />,
+        children: [
+            {
+                path: '',
+                element: <DashboardLayout />,
+                children: [
+                    {
+                        path: '',
+                        element: <HomePage />
+                    },
+                    {
+                        element: <RoleBasedRoute allowedRole={'user'} />,
+                        children: [...userRoutes]
+                    },
+                    {
+                        element: <RoleBasedRoute allowedRole={'admin'} />,
+                        children: [...adminRoutes]
+                    }
+                ]
+            }
+        ]
+    }
+]);
 
 const AppRoutes = () => {
-
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(hydrateUser())
-        dispatch(userRelatedProjectAction())
-        dispatch(getAllTaskAction())
-        JSON.parse(localStorage.getItem('mode')) === 'light' ? window.document.body.classList.add('light') : '';
-
-    }, [])
-
-    const { user, isAuthenticated } = useSelector((state) => state.auth);
-    const userRole = user?.role;
-
-    const router = createBrowserRouter([
-        {
-            path: '/',
-            element: <PublicRoute />,
-            children: [
-                {
-                    path: '',
-                    element: <AuthLayout />,
-                    children: [
-                        {
-                            path: '',
-                            element: <Login />
-                        },
-                        {
-                            path: 'register',
-                            element: <Register />
-                        }
-
-                    ]
-                }
-            ]
-        },
-        {
-            path: '/home',
-            element: <ProtectedRoute />,
-            children: [
-                {
-                    path: '',
-                    element: <DashboardLayout />,
-                    children: [
-                        {
-                            path: '',
-                            element: <HomePage />
-                        },
-                        {
-                            element: <RoleBasedRoute allowedRole={'user'} userRole={userRole} isAuthenticated={isAuthenticated} />,
-                            children: [...userRoutes]
-                        },
-                        {
-                            element: <RoleBasedRoute allowedRole={'admin'} userRole={userRole} isAuthenticated={isAuthenticated} />,
-                            children: [...adminRoutes]
-                        }
-                    ]
-                }
-            ]
+        dispatch(hydrateUser());
+        if (JSON.parse(localStorage.getItem('mode')) === 'light') {
+            window.document.body.classList.add('light');
         }
-    ])
+    }, [dispatch]);
 
+    return <RouterProvider router={router} />;
+};
 
-
-    return <RouterProvider router={router} />
-
-}
-
-export default AppRoutes
+export default AppRoutes;

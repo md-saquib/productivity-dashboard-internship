@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../../app/config/axiosInstance";
+import { socket } from "../../../app/config/socketInstance";
 
 // 1. Register User Action
 export const registerUser = createAsyncThunk(
@@ -36,7 +37,6 @@ export const loginUser = createAsyncThunk(
     "/api/auth/login",
     async (credentials, { rejectWithValue }) => {
         try {
-
             const response = await axiosInstance.post("/api/auth/login", credentials);
             return response.data;
         } catch (error) {
@@ -53,6 +53,8 @@ export const logout = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.get("/api/auth/logout");
+            // Close the WebSocket connection cleanly on logout
+            if (socket.connected) socket.disconnect();
             return response.data;
         } catch (error) {
             const message =
@@ -60,4 +62,4 @@ export const logout = createAsyncThunk(
             return rejectWithValue(message);
         }
     }
-);
+);

@@ -41,6 +41,12 @@ const projectSchema = new mongoose.Schema(
       enum: ["Not Started", 'Active', 'Pending', 'On Hold', 'Completed'],
       default: 'Active',
     },
+    progress: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       required: [true, 'User reference is required'],
