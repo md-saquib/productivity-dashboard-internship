@@ -13,10 +13,11 @@ const initSocket = (httpServer) => {
 
     io = new Server(httpServer, {
         cors: {
-            origin: config.CLIENT_ORIGIN,
+            origin: true,
             methods: ['GET', 'POST'],
             credentials: true,
         },
+        transports: ['websocket', 'polling'],
     });
 
 

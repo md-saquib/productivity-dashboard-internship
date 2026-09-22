@@ -5,17 +5,25 @@ const bcrypt = require('bcryptjs');
 const config = require('../config/config');
 
 
+const getCookieOptions = (rememberMe = false) => {
+    const isProd = config.NODE_ENV === 'production' || !!process.env.RENDER;
+    return {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
+        maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
+    };
+};
+
 const Register = async (req, res) => {
     const { fullName, email, role, password, department } = req.body;
 
     try {
-
         const existingUser = await RegisterModel.findOne({ email });
 
         if (existingUser) return res.status(400).json({
             message: "User already Exist.."
         })
-
 
         const user = await RegisterModel.create({
             fullName,
@@ -26,12 +34,7 @@ const Register = async (req, res) => {
         })
 
         const token = jwt.sign({ id: user._id }, config.ACCESS_SECERET_KEY);
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: config.NODE_ENV === "production", // Production mein true hona zaroori hai (HTTPS ke liye)
-            sameSite: config.NODE_ENV === "production" ? "none" : "lax", // Cross-domain ke liye 'none' zaroori hai
-            maxAge: 24 * 60 * 60 * 1000
-        });
+        res.cookie("token", token, getCookieOptions(true));
 
         res.status(201).json({
             success: true,
@@ -60,7 +63,6 @@ const Login = async (req, res) => {
     try {
         const { email, password, rememberMe } = req.body;
 
-
         const user = await RegisterModel.findOne({ email }).select(' -createdAt -updatedAt -__v');
 
         if (!user) return res.status(401).json({
@@ -73,20 +75,10 @@ const Login = async (req, res) => {
             return res.status(401).json({
                 message: "Wrong email or passowrd"
             })
-
-
         }
 
-        if (rememberMe) {
-            const token = jwt.sign({ id: user._id }, config.ACCESS_SECERET_KEY)
-            res.cookie("token", token, {
-                httpOnly: true,
-                secure: config.NODE_ENV === "production", // Production mein true hona zaroori hai (HTTPS ke liye)
-                sameSite: config.NODE_ENV === "production" ? "none" : "lax", // Cross-domain ke liye 'none' zaroori hai
-                maxAge: 24 * 60 * 60 * 1000
-            });
-        }
-
+        const token = jwt.sign({ id: user._id }, config.ACCESS_SECERET_KEY);
+        res.cookie("token", token, getCookieOptions(Boolean(rememberMe)));
 
         return res.status(200).json({
             success: true,
@@ -97,7 +89,8 @@ const Login = async (req, res) => {
                 fullName: user.fullName,
                 id: user._id,
                 role: user.role
-            }
+            },
+            token
         })
 
     } catch (error) {
@@ -110,11 +103,8 @@ const Login = async (req, res) => {
 
 }
 
-
-
 const Logout = (req, res) => {
-
-    res.cookie('token', '');
+    res.clearCookie('token', getCookieOptions(false));
 
     return res.status(200).json({
         message: "Logout Successfull",
@@ -123,10 +113,8 @@ const Logout = (req, res) => {
 }
 
 const HydrateUser = (req, res) => {
-
     try {
         if (!req.user) return res.status(401).json({ message: "Unauthorized" });
-
 
         res.status(200).json({
             success: true,
@@ -141,7 +129,6 @@ const HydrateUser = (req, res) => {
             error: error.message
         })
     }
-
 }
 
 module.exports = { Register, Login, Logout, HydrateUser }
