@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 function Profile() {
 
-  const { fullName, email, department, role, id } = useSelector(state => state.auth.user);g
+  const { fullName, email, department, role, id } = useSelector(state => state.auth.user);
 
   const formatText = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
