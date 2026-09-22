@@ -5,6 +5,9 @@ Feel free to explore the application! You can log in using the following test cr
 *   **Email:** `maryam@gmail.com`
 *   **Password:** `maryam123`
 
+## 🚀 Live Link
+**Url** https://developerfloww.netlify.app
+
 ## 🚧 Work in Progress
 
 *   **Admin Panel:** The admin dashboard is currently under development and will be coming soon in a future update!
