@@ -1,13 +1,13 @@
-<!-- 
+## 🚀 Live Demo Access
 
-email : maryam@gmail.com
-password: maryam123
+Feel free to explore the application! You can log in using the following test credentials:
 
-you guys can login with this id must visit 
- -->
+*   **Email:** `maryam@gmail.com`
+*   **Password:** `maryam123`
 
+## 🚧 Work in Progress
 
-<!--   Also make admin panel work in progressss  -->
+*   **Admin Panel:** The admin dashboard is currently under development and will be coming soon in a future update!
 
 
 # 🚀 AI-Powered Project & Task Management Platform (DevFlow)
